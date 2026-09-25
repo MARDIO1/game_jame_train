@@ -1,0 +1,68 @@
+[gd_scene load_steps=8 format=3 uid="uid://66pltxegjbx8"]
+
+[ext_resource type="Script" path="res://interactables/computer.gd" id="1_computer"]
+[ext_resource type="Script" path="res://interactables/interactable.gd" id="2_interactable"]
+
+[sub_resource type="StandardMaterial3D" id="Material_body"]
+albedo_color = Color(0.16, 0.18, 0.2, 1)
+roughness = 0.72
+
+[sub_resource type="StandardMaterial3D" id="Material_screen"]
+albedo_color = Color(0.02, 0.12, 0.17, 1)
+metallic = 0.15
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="Mesh_screen"]
+material = SubResource("Material_screen")
+size = Vector3(0.65, 0.4, 0.02)
+
+[sub_resource type="BoxShape3D" id="Shape_body"]
+size = Vector3(0.75, 1.7, 0.25)
+
+[sub_resource type="BoxShape3D" id="Shape_interact"]
+size = Vector3(0.85, 1.8, 0.35)
+
+[node name="Computer" type="Node3D"]
+script = ExtResource("1_computer")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Shell" type="CSGCombiner3D" parent="Visual"]
+
+[node name="Monitor" type="CSGBox3D" parent="Visual/Shell"]
+size = Vector3(0.75, 0.5, 0.1)
+material = SubResource("Material_body")
+
+[node name="Stand" type="CSGBox3D" parent="Visual/Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0)
+size = Vector3(0.1, 1.14, 0.1)
+material = SubResource("Material_body")
+
+[node name="Base" type="CSGBox3D" parent="Visual/Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.375, 0)
+size = Vector3(0.5, 0.07, 0.3)
+material = SubResource("Material_body")
+
+[node name="Screen" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.06)
+mesh = SubResource("Mesh_screen")
+
+[node name="Body" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
+shape = SubResource("Shape_body")
+
+[node name="Interactable" type="Area3D" parent="." node_paths=PackedStringArray("highlight_root")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interactable")
+interact_hint = "打开电脑"
+highlight_root = NodePath("../Visual/Shell")
+outline_width_m = 0.005
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
+shape = SubResource("Shape_interact")
+
+[connection signal="interacted" from="Interactable" to="." method="_on_interactable_interacted"]

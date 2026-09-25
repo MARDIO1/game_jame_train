@@ -1,13 +1,35 @@
-## 玩家移动与第一人称视角。依赖场景中的 Head 节点和项目的 move_*、escape 输入动作。
+## 玩家移动、第一人称视角与交互检测。依赖场景中的 Head、Camera3D 和 RayCast3D。
 
 #region 依赖
 extends CharacterBody3D
+
+signal interact_hint_changed(text: String)
+
+const InteractableType = preload("res://interactables/interactable.gd")
+
 @onready var head: Node3D = $Head
+@onready var interact_ray: RayCast3D = $Head/Camera3D/RayCast3D
 #endregion
 
-#region 状态机
-enum game_state{UI,WORLD1}
-var current_game_state:game_state= game_state.WORLD1
+#region 交互
+var current_interactable: InteractableType
+
+
+## 检测相机中心当前指向的交互物，并同步高光与 HUD 提示。
+func _update_interactable() -> void:
+	var next_interactable: InteractableType
+	if interact_ray.is_colliding() and interact_ray.get_collider() is InteractableType:
+		next_interactable = interact_ray.get_collider() as InteractableType
+	if next_interactable == current_interactable:
+		return
+	if current_interactable != null:
+		current_interactable.set_highlighted(false)
+	current_interactable = next_interactable
+	if current_interactable == null:
+		interact_hint_changed.emit("")
+	else:
+		current_interactable.set_highlighted(true)
+		interact_hint_changed.emit(current_interactable.get_interact_hint())
 #endregion
 
 #region 视角
@@ -16,8 +38,8 @@ const MOUSE_SENSITIVITY_RAD_PER_PIXEL: float = 0.002
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-## 处理鼠标视角；Esc 释放鼠标，左键重新捕获。
-func _unhandled_input(event: InputEvent) -> void:
+## 优先处理鼠标视角；Esc 释放鼠标，左键重新捕获。
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("escape"):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -31,6 +53,9 @@ func _unhandled_input(event: InputEvent) -> void:
 const SPEED_MPS: float = 5.0
 ## 每个物理帧读取 WASD，施加重力并移动玩家。
 func _physics_process(delta: float) -> void:
+	_update_interactable()
+	if Input.is_action_just_pressed("interact") and current_interactable != null:
+		current_interactable.interact(self)
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	var move_input: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
