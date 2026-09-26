@@ -1,8 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://66pltxegjbx8"]
+[gd_scene format=3 uid="uid://cpfxhdadl6hod"]
 
 [ext_resource type="Script" path="res://interactables/computer.gd" id="1_computer"]
-[ext_resource type="Script" path="res://interactables/interactable.gd" id="2_interactable"]
-[ext_resource type="FontFile" path="res://ui/IPix中文像素字体.ttf" id="3_font"]
+[ext_resource type="Script" uid="uid://b0fnejk1c2cj8" path="res://interactables/interactable.gd" id="2_interactable"]
+[ext_resource type="FontFile" uid="uid://cbdr5w2rygrw6" path="res://ui/IPix中文像素字体.ttf" id="3_font"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
 albedo_color = Color(0.16, 0.18, 0.2, 1)
@@ -22,41 +22,41 @@ size = Vector3(0.75, 1.7, 0.25)
 [sub_resource type="BoxShape3D" id="Shape_interact"]
 size = Vector3(0.85, 1.8, 0.35)
 
-[node name="Computer" type="Node3D" node_paths=PackedStringArray("control_camera", "computer_view") groups=["controller"]]
+[node name="Computer" type="Node3D" unique_id=1923739087 node_paths=PackedStringArray("control_camera", "computer_view") groups=["controller"]]
 script = ExtResource("1_computer")
 control_camera = NodePath("Camera3D")
 computer_view = NodePath("ComputerLayer/ComputerView")
 
-[node name="Visual" type="Node3D" parent="."]
+[node name="Visual" type="Node3D" parent="." unique_id=1794424932]
 
-[node name="Shell" type="CSGCombiner3D" parent="Visual"]
+[node name="Shell" type="CSGCombiner3D" parent="Visual" unique_id=241828440]
 
-[node name="Monitor" type="CSGBox3D" parent="Visual/Shell"]
+[node name="Monitor" type="CSGBox3D" parent="Visual/Shell" unique_id=201915725]
 size = Vector3(0.75, 0.5, 0.1)
 material = SubResource("Material_body")
 
-[node name="Stand" type="CSGBox3D" parent="Visual/Shell"]
+[node name="Stand" type="CSGBox3D" parent="Visual/Shell" unique_id=1151512106]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0)
 size = Vector3(0.1, 1.14, 0.1)
 material = SubResource("Material_body")
 
-[node name="Base" type="CSGBox3D" parent="Visual/Shell"]
+[node name="Base" type="CSGBox3D" parent="Visual/Shell" unique_id=475440189]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.375, 0)
 size = Vector3(0.5, 0.07, 0.3)
 material = SubResource("Material_body")
 
-[node name="Screen" type="MeshInstance3D" parent="Visual"]
+[node name="Screen" type="MeshInstance3D" parent="Visual" unique_id=2127457655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.06)
 mesh = SubResource("Mesh_screen")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=534003741]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.82)
 fov = 53.13
 
-[node name="ComputerLayer" type="CanvasLayer" parent="."]
+[node name="ComputerLayer" type="CanvasLayer" parent="." unique_id=1400063887]
 layer = 5
 
-[node name="ComputerView" type="SubViewportContainer" parent="ComputerLayer"]
+[node name="ComputerView" type="SubViewportContainer" parent="ComputerLayer" unique_id=1699996342]
 modulate = Color(1, 1, 1, 0)
 offset_right = 2.0
 offset_bottom = 2.0
@@ -64,11 +64,12 @@ mouse_filter = 2
 stretch = true
 stretch_shrink = 2
 
-[node name="SubViewport" type="SubViewport" parent="ComputerLayer/ComputerView"]
-size = Vector2i(650, 400)
+[node name="SubViewport" type="SubViewport" parent="ComputerLayer/ComputerView" unique_id=1636985891]
+handle_input_locally = false
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
-[node name="ComputerUI" type="Control" parent="ComputerLayer/ComputerView/SubViewport"]
+[node name="ComputerUI" type="Control" parent="ComputerLayer/ComputerView/SubViewport" unique_id=461439122]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,7 +77,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background" type="ColorRect" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI"]
+[node name="Background" type="ColorRect" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI" unique_id=1743123960]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -86,7 +87,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.015, 0.045, 0.065, 1)
 
-[node name="Title" type="Label" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI"]
+[node name="Title" type="Label" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI" unique_id=135687162]
 layout_mode = 0
 offset_left = 28.0
 offset_top = 24.0
@@ -96,7 +97,7 @@ theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 30
 text = "COMPUTER"
 
-[node name="TestLabel" type="Label" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI"]
+[node name="TestLabel" type="Label" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI" unique_id=908513222]
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
@@ -111,7 +112,7 @@ theme_override_font_sizes/font_size = 26
 text = "等待点击"
 horizontal_alignment = 1
 
-[node name="TestButton" type="Button" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI"]
+[node name="TestButton" type="Button" parent="ComputerLayer/ComputerView/SubViewport/ComputerUI" unique_id=1916764239]
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
@@ -126,20 +127,19 @@ theme_override_fonts/font = ExtResource("3_font")
 theme_override_font_sizes/font_size = 24
 text = "测试按钮"
 
-[node name="Body" type="StaticBody3D" parent="."]
+[node name="Body" type="StaticBody3D" parent="." unique_id=597864641]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body" unique_id=285146010]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
 shape = SubResource("Shape_body")
 
-[node name="Interactable" type="Area3D" parent="." node_paths=PackedStringArray("highlight_root")]
+[node name="Interactable" type="Area3D" parent="." unique_id=1304668991 node_paths=PackedStringArray("highlight_root")]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_interactable")
-interact_hint = "打开电脑"
 highlight_root = NodePath("../Visual/Shell")
-outline_width_px = 3.0
+interact_hint = "打开电脑"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable" unique_id=1967964704]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
 shape = SubResource("Shape_interact")

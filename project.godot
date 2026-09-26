@@ -12,8 +12,8 @@ config_version=5
 
 config/name="递归游戏"
 run/main_scene="uid://bmnr5l1dfu8wh"
-run/max_fps=60
 config/features=PackedStringArray("4.7", "GL Compatibility")
+run/max_fps=60
 run/size/mode=0
 
 [autoload]
@@ -72,7 +72,9 @@ interact={
 
 [physics]
 
+common/physics_jitter_fix=0.0
 3d/physics_engine="Jolt Physics"
+common/physics_interpolation=true
 
 [rendering]
 

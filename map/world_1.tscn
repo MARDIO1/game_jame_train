@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://djmmwm6yrh14n"]
 
 [ext_resource type="PackedScene" uid="uid://beu2pqhv21kel" path="res://actor/player.tscn" id="1_oonqn"]
-[ext_resource type="PackedScene" uid="uid://66pltxegjbx8" path="res://interactables/computer.tscn" id="2_computer"]
+[ext_resource type="PackedScene" uid="uid://66pltxegjbx8" path="res://interactables/computer/computer.tscn" id="2_computer"]
 [ext_resource type="PackedScene" uid="uid://b14lxw02x8s16" path="res://ui/HUD.tscn" id="3_hud"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_o3h3q"]

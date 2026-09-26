@@ -1,0 +1,106 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://interactables/computer/os/apps/file_manager.gd" id="1_file_manager"]
+
+[node name="FileManager" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_file_manager")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.96, 0.96, 0.96, 1)
+
+[node name="Toolbar" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+color = Color(0.78, 0.78, 0.78, 1)
+
+[node name="BackButton" type="Button" parent="Toolbar"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 56.0
+offset_bottom = 36.0
+theme_type_variation = &"ActiveDriveButton"
+text = "<"
+
+[node name="Path" type="Label" parent="Toolbar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+text = "C:\\"
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 24
+
+[node name="Drives" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = 40.0
+offset_right = 100.0
+grow_vertical = 2
+
+[node name="CDriveButton" type="Button" parent="Drives"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 5.0
+offset_top = 8.0
+offset_right = -5.0
+offset_bottom = 42.0
+grow_horizontal = 2
+text = "C:"
+theme_type_variation = &"ActiveDriveButton"
+
+[node name="DDriveButton" type="Button" parent="Drives"]
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 5.0
+offset_top = 48.0
+offset_right = -5.0
+offset_bottom = 82.0
+grow_horizontal = 2
+text = "D:"
+disabled = true
+theme_type_variation = &"DriveButton"
+
+[node name="EntriesScroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 108.0
+offset_top = 48.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 1
+
+[node name="Entries" type="VBoxContainer" parent="EntriesScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3

@@ -24,9 +24,9 @@ func _ready() -> void:
 	_initialize_controllers()
 
 
-## 使用 Esc 返回上一个 Controller；普通玩家状态下仍由 Player 处理 Esc。
+## 使用 E 返回上一个 Controller；普通玩家状态下的 E 仍用于交互。
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("escape") and previous_controller != null and not is_transitioning:
+	if event.is_action_pressed("interact") and previous_controller != null and not is_transitioning:
 		get_viewport().set_input_as_handled()
 		_return_to_previous_controller()
 #endregion
@@ -61,25 +61,29 @@ func _on_control_requested(controller: Node) -> void:
 		await switch_controller(controller)
 
 
-## 平滑切换到指定 Controller 的摄像机和输入。
+## 当前相机先移动到目标相机位置，再交接镜头与输入。
 func switch_controller(next_controller: Node) -> void:
 	is_transitioning = true
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	var source_camera: Camera3D = _get_control_camera(current_controller)
 	var target_camera: Camera3D = _get_control_camera(next_controller)
+	var source_transform: Transform3D = source_camera.global_transform
+	var source_fov_deg: float = source_camera.fov
 	var target_transform: Transform3D = target_camera.global_transform
 	var target_fov_deg: float = target_camera.fov
 	current_controller.set_controlled(false)
 	next_controller.set_controlled(false)
-	target_camera.global_transform = source_camera.global_transform
-	target_camera.fov = source_camera.fov
-	source_camera.current = false
-	target_camera.current = true
 	var tween: Tween = create_tween()
 	tween.set_parallel().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(target_camera, "global_transform", target_transform, transition_duration_s)
-	tween.tween_property(target_camera, "fov", target_fov_deg, transition_duration_s)
+	tween.tween_property(source_camera, "global_transform", target_transform, transition_duration_s)
+	tween.tween_property(source_camera, "fov", target_fov_deg, transition_duration_s)
 	await tween.finished
+	target_camera.reset_physics_interpolation()
+	source_camera.current = false
+	target_camera.current = true
+	source_camera.global_transform = source_transform
+	source_camera.fov = source_fov_deg
+	source_camera.reset_physics_interpolation()
 	current_controller = next_controller
 	current_controller.set_controlled(true)
 	is_transitioning = false

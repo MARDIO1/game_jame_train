@@ -1,0 +1,93 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://interactables/computer/os/app_window.gd" id="1_window"]
+
+[node name="AppWindow" type="Panel"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 466.0
+offset_bottom = 312.0
+script = ExtResource("1_window")
+
+[node name="TitleBar" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = 38.0
+grow_horizontal = 2
+color = Color(0.04, 0.36, 0.58, 1)
+
+[node name="Title" type="Label" parent="TitleBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -120.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "窗口"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="TitleBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -34.0
+offset_top = 4.0
+offset_right = -2.0
+offset_bottom = 34.0
+grow_horizontal = 0
+theme_type_variation = &"CloseButton"
+text = "X"
+
+[node name="MaximizeButton" type="Button" parent="TitleBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -70.0
+offset_top = 4.0
+offset_right = -38.0
+offset_bottom = 34.0
+grow_horizontal = 0
+theme_type_variation = &"WindowButton"
+text = "□"
+
+[node name="MinimizeButton" type="Button" parent="TitleBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -106.0
+offset_top = 4.0
+offset_right = -74.0
+offset_bottom = 34.0
+grow_horizontal = 0
+theme_type_variation = &"WindowButton"
+text = "—"
+
+[node name="Content" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 40.0
+offset_right = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2

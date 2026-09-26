@@ -1,0 +1,140 @@
+[gd_resource type="Theme" format=3 uid="uid://esemr1idlcsx"]
+
+[ext_resource type="FontFile" uid="uid://cbdr5w2rygrw6" path="res://ui/IPix中文像素字体.ttf" id="1_font"]
+
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.08, 0.38, 0.62, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.03, 0.03, 0.03, 1)
+
+[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
+bg_color = Color(0.04, 0.25, 0.44, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.03, 0.03, 0.03, 1)
+
+[sub_resource type="StyleBoxFlat" id="Focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
+bg_color = Color(0.76, 0.76, 0.76, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.08, 0.08, 0.08, 1)
+
+[sub_resource type="StyleBoxFlat" id="CloseNormal"]
+bg_color = Color(0.82, 0.05, 0.05, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.03, 0.03, 0.03, 1)
+
+[sub_resource type="StyleBoxFlat" id="WindowButton"]
+bg_color = Color(0.04, 0.42, 0.62, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.03, 0.03, 0.03, 1)
+
+[sub_resource type="StyleBoxFlat" id="DriveNormal"]
+bg_color = Color(0.97, 0.97, 0.97, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.08, 0.08, 0.08, 1)
+
+[sub_resource type="StyleBoxFlat" id="FileEntryNormal"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="FileEntryHover"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.04, 0.42, 0.62, 1)
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.78, 0.78, 0.78, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.08, 0.08, 0.08, 1)
+
+[sub_resource type="StyleBoxFlat" id="TextNormal"]
+bg_color = Color(0.97, 0.97, 0.97, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.18, 0.18, 1)
+
+[resource]
+default_font = ExtResource("1_font")
+default_font_size = 18
+ActiveDriveButton/base_type = &"Button"
+ActiveDriveButton/colors/font_color = Color(1, 1, 1, 1)
+ActiveDriveButton/colors/font_hover_color = Color(1, 1, 1, 1)
+ActiveDriveButton/styles/hover = SubResource("ButtonHover")
+ActiveDriveButton/styles/normal = SubResource("ButtonHover")
+ActiveDriveButton/styles/pressed = SubResource("ButtonPressed")
+Button/colors/font_color = Color(0.04, 0.04, 0.04, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_hover_color = Color(1, 1, 1, 1)
+Button/colors/icon_normal_color = Color(1, 1, 1, 1)
+Button/styles/focus = SubResource("Focus")
+Button/styles/hover = SubResource("ButtonHover")
+Button/styles/normal = SubResource("ButtonNormal")
+Button/styles/pressed = SubResource("ButtonPressed")
+CloseButton/base_type = &"Button"
+CloseButton/colors/font_color = Color(1, 1, 1, 1)
+CloseButton/colors/font_hover_color = Color(1, 1, 1, 1)
+CloseButton/styles/hover = SubResource("CloseNormal")
+CloseButton/styles/normal = SubResource("WindowButton")
+CloseButton/styles/pressed = SubResource("CloseNormal")
+DriveButton/base_type = &"Button"
+DriveButton/colors/font_color = Color(0.04, 0.04, 0.04, 1)
+DriveButton/colors/font_disabled_color = Color(0.4, 0.4, 0.4, 1)
+DriveButton/colors/font_hover_color = Color(1, 1, 1, 1)
+DriveButton/styles/hover = SubResource("ButtonHover")
+DriveButton/styles/normal = SubResource("DriveNormal")
+DriveButton/styles/pressed = SubResource("ButtonPressed")
+FileEntryButton/base_type = &"Button"
+FileEntryButton/colors/font_color = Color(0.04, 0.04, 0.04, 1)
+FileEntryButton/colors/font_focus_color = Color(1, 1, 1, 1)
+FileEntryButton/colors/font_hover_color = Color(1, 1, 1, 1)
+FileEntryButton/colors/font_pressed_color = Color(1, 1, 1, 1)
+FileEntryButton/styles/focus = SubResource("FileEntryNormal")
+FileEntryButton/styles/hover = SubResource("FileEntryHover")
+FileEntryButton/styles/normal = SubResource("FileEntryNormal")
+FileEntryButton/styles/pressed = SubResource("FileEntryHover")
+Label/colors/font_color = Color(0.04, 0.04, 0.04, 1)
+Panel/styles/panel = SubResource("Panel")
+TextEdit/colors/caret_color = Color(0.04, 0.04, 0.04, 1)
+TextEdit/colors/font_color = Color(0.04, 0.04, 0.04, 1)
+TextEdit/colors/font_readonly_color = Color(0.04, 0.04, 0.04, 1)
+TextEdit/styles/focus = SubResource("TextNormal")
+TextEdit/styles/normal = SubResource("TextNormal")
+TextEdit/styles/read_only = SubResource("TextNormal")
+WindowButton/base_type = &"Button"
+WindowButton/colors/font_color = Color(1, 1, 1, 1)
+WindowButton/colors/font_hover_color = Color(1, 1, 1, 1)
+WindowButton/styles/hover = SubResource("ButtonHover")
+WindowButton/styles/normal = SubResource("WindowButton")
+WindowButton/styles/pressed = SubResource("ButtonPressed")

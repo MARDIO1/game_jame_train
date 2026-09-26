@@ -7,7 +7,13 @@ android/
 .DS_Store
 Thumbs.db
 *.log
+~$*
+__pycache__/
+*.py[cod]
 
 # Local build output
 build/
 dist/
+
+AI工作日记.md
+*.pptx
