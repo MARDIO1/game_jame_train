@@ -4,17 +4,17 @@
 [ext_resource type="FontFile" path="res://ui/IPix中文像素字体.ttf" id="2_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hint"]
-content_margin_left = 12.0
-content_margin_top = 10.0
-content_margin_right = 14.0
-content_margin_bottom = 10.0
+content_margin_left = 14.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
 bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_key"]
-content_margin_left = 8.0
-content_margin_top = 2.0
-content_margin_right = 8.0
-content_margin_bottom = 2.0
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
 bg_color = Color(0, 0, 0, 1)
 border_width_left = 3
 border_width_top = 3
@@ -41,11 +41,12 @@ script = ExtResource("1_hint")
 [node name="Content" type="HBoxContainer" parent="InteractHint"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 22
 
 [node name="KeyBox" type="PanelContainer" parent="InteractHint/Content"]
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_key")
 
@@ -53,13 +54,14 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_key")
 layout_mode = 2
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 36
 text = "E"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HintLabel" type="Label" parent="InteractHint/Content"]
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 32

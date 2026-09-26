@@ -17,9 +17,7 @@ var current_interactable: InteractableType
 
 ## 检测相机中心当前指向的交互物，并同步高光与 HUD 提示。
 func _update_interactable() -> void:
-	var next_interactable: InteractableType
-	if interact_ray.is_colliding() and interact_ray.get_collider() is InteractableType:
-		next_interactable = interact_ray.get_collider() as InteractableType
+	var next_interactable: InteractableType = interact_ray.get_collider() as InteractableType
 	if next_interactable == current_interactable:
 		return
 	if current_interactable != null:

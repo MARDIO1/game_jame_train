@@ -42,4 +42,4 @@ wire `~/.claude/settings.json` to read `<team-name>/lead_pending.jsonl` via the
 - Read lead inbox: MCP tool `inbox_read`
 - Add a worker: MCP tool `worker_add`
 
-_Generated at 2026-09-25T12:07:38.249895200+00:00._
+_Generated at 2026-09-26T03:10:45.868348100+00:00._
