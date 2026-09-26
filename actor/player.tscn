@@ -10,8 +10,9 @@ height = 1.8
 radius = 0.4
 height = 1.8
 
-[node name="Player" type="CharacterBody3D" unique_id=1055697178]
+[node name="Player" type="CharacterBody3D" unique_id=1055697178 node_paths=PackedStringArray("control_camera") groups=["controller"]]
 script = ExtResource("1_pcoxj")
+control_camera = NodePath("Head/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=267836755]
 shape = SubResource("CapsuleShape3D_4q64g")

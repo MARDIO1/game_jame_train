@@ -62,3 +62,11 @@
 - 将电脑内部 `Interactable.interacted` 信号由场景文件连接改为 `computer.gd` 中的代码连接，使组件依赖和处理函数集中维护。
 - 保留 Player 到 HUD 的场景连接；它属于 `world_1` 对两个独立场景实例的装配，当前不为一行连接额外增加世界脚本。
 - Godot 4.7.2 编辑器模式加载通过，未实现尚待确认交互与输入方案的 SubViewport。
+
+## 2026-09-26 13:30（北京时间）
+
+- 将 `root.tscn` 设为主场景并挂载 `world_1.tscn`；新增薄 Root 控制器，统一管理世界保存/切换和 `controller` 切换。
+- Player 与 Computer 统一加入 `controller` 分组，均提供 `control_camera`、`control_requested` 和 `set_controlled()`；Player 失去控制时完全停止处理，Computer 失去控制时仅关闭鼠标输入并继续刷新屏幕。
+- 为 Computer 增加独立 Camera3D、SubViewport、自动贴合3D屏幕的鼠标层和可点击测试界面；Root 使用两台摄像机完成 `0.6 s` 平滑位置与旋转切换，Esc 返回上一个 Controller。
+- 新增唯一存档数据资源和按世界编号保存的 TSCN 接口；过渡期间返回 `ERR_BUSY`，当前/上一个 Controller 使用世界内 NodePath 写盘并在加载后恢复为直接引用。
+- 有窗口回归通过：射线交互、Player 完全冻结、摄像机切换、SubViewport 鼠标按钮、Esc 返回、世界 TSCN 状态恢复和 Controller 引用恢复均正常；截图确认输入层在 `2560×1600` 下贴合3D屏幕。临时测试脚本、截图和测试存档已删除。

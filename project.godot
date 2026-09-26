@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="递归游戏"
-run/main_scene="uid://djmmwm6yrh14n"
+run/main_scene="uid://bmnr5l1dfu8wh"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 run/size/mode=0
 

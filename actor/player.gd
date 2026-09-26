@@ -4,11 +4,30 @@
 extends CharacterBody3D
 
 signal interact_hint_changed(text: String)
+signal control_requested(controller: Node)
 
 const InteractableType = preload("res://interactables/interactable.gd")
 
+@export var control_camera: Camera3D
+
 @onready var head: Node3D = $Head
 @onready var interact_ray: RayCast3D = $Head/Camera3D/RayCast3D
+#endregion
+
+#region Controller
+
+## 开关玩家的全部处理，并同步第一人称鼠标状态。
+func set_controlled(active: bool) -> void:
+	if active:
+		process_mode = Node.PROCESS_MODE_INHERIT
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		return
+	if current_interactable != null:
+		current_interactable.set_highlighted(false)
+	current_interactable = null
+	interact_hint_changed.emit("")
+	velocity = Vector3.ZERO
+	process_mode = Node.PROCESS_MODE_DISABLED
 #endregion
 
 #region 交互
@@ -47,13 +66,14 @@ func _input(event: InputEvent) -> void:
 		head.rotation.x = clampf(head.rotation.x - event.relative.y * MOUSE_SENSITIVITY_RAD_PER_PIXEL, -PI / 2, PI / 2)
 #endregion
 
-#region 物理,移动
-const SPEED_MPS: float = 5.0
+#region 移动
+const SPEED_MPS: float = 3.0
 ## 每个物理帧读取 WASD，施加重力并移动玩家。
 func _physics_process(delta: float) -> void:
 	_update_interactable()
 	if Input.is_action_just_pressed("interact") and current_interactable != null:
 		current_interactable.interact(self)
+		return
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	var move_input: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
