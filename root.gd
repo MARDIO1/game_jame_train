@@ -43,7 +43,7 @@ func _initialize_controllers() -> void:
 		var camera: Camera3D = _get_control_camera(controller)
 		camera.current = controller == current_controller
 		controller.set_controlled(controller == current_controller)
-		if not controller.control_requested.is_connected(_on_control_requested):
+		if controller.has_signal("control_requested") and not controller.control_requested.is_connected(_on_control_requested):
 			controller.control_requested.connect(_on_control_requested)
 
 
@@ -68,14 +68,17 @@ func switch_controller(next_controller: Node) -> void:
 	var source_camera: Camera3D = _get_control_camera(current_controller)
 	var target_camera: Camera3D = _get_control_camera(next_controller)
 	var target_transform: Transform3D = target_camera.global_transform
+	var target_fov_deg: float = target_camera.fov
 	current_controller.set_controlled(false)
 	next_controller.set_controlled(false)
 	target_camera.global_transform = source_camera.global_transform
+	target_camera.fov = source_camera.fov
 	source_camera.current = false
 	target_camera.current = true
 	var tween: Tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.set_parallel().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(target_camera, "global_transform", target_transform, transition_duration_s)
+	tween.tween_property(target_camera, "fov", target_fov_deg, transition_duration_s)
 	await tween.finished
 	current_controller = next_controller
 	current_controller.set_controlled(true)

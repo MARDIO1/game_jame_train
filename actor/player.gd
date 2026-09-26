@@ -4,17 +4,15 @@
 extends CharacterBody3D
 
 signal interact_hint_changed(text: String)
-signal control_requested(controller: Node)
 
 const InteractableType = preload("res://interactables/interactable.gd")
 
 @export var control_camera: Camera3D
-
 @onready var head: Node3D = $Head
 @onready var interact_ray: RayCast3D = $Head/Camera3D/RayCast3D
 #endregion
 
-#region Controller
+#region 焦点控制开关Controller，和root交互
 
 ## 开关玩家的全部处理，并同步第一人称鼠标状态。
 func set_controlled(active: bool) -> void:

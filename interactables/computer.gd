@@ -1,9 +1,9 @@
 ## 可控制电脑。负责交互请求、SubViewport 鼠标开关和内部测试界面。
-extends Node3D
 
-signal control_requested(controller: Node)
 
 #region 依赖
+extends Node3D
+signal control_requested(controller: Node)
 const InteractableType = preload("res://interactables/interactable.gd")
 
 @export var control_camera: Camera3D

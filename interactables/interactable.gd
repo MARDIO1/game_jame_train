@@ -1,6 +1,8 @@
 ## 通用交互组件。提供提示文字、交互信号、确认音效和共享白色轮廓。
+#region 依赖
 class_name Interactable
 extends Area3D
+#endregion
 
 #region 生命周期
 
@@ -14,7 +16,7 @@ func _ready() -> void:
 const OUTLINE_SHADER: Shader = preload("res://interactables/outline.gdshader")
 
 @export var highlight_root: Node3D
-@export_range(0.001, 0.1, 0.001, "suffix:m") var outline_width_m: float = 0.005
+@export_range(0.5, 10.0, 0.5, "suffix:px") var outline_width_px: float = 3.0
 
 var outline_material: ShaderMaterial = ShaderMaterial.new()
 var highlight_meshes: Array[GeometryInstance3D] = []
@@ -24,7 +26,7 @@ var highlight_meshes: Array[GeometryInstance3D] = []
 func _setup_highlight() -> void:
 	assert(highlight_root != null, "Interactable 需要指定 highlight_root")
 	outline_material.shader = OUTLINE_SHADER
-	outline_material.set_shader_parameter("outline_width_m", outline_width_m)
+	outline_material.set_shader_parameter("outline_width_px", outline_width_px)
 	if highlight_root is GeometryInstance3D:
 		highlight_meshes.append(highlight_root as GeometryInstance3D)
 	else:

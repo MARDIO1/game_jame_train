@@ -138,7 +138,7 @@ collision_mask = 0
 script = ExtResource("2_interactable")
 interact_hint = "打开电脑"
 highlight_root = NodePath("../Visual/Shell")
-outline_width_m = 0.005
+outline_width_px = 3.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
