@@ -1,11 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://bmnr5l1dfu8wh"]
+[gd_scene load_steps=4 format=3 uid="uid://bmnr5l1dfu8wh"]
 
 [ext_resource type="Script" path="res://root.gd" id="1_root"]
 [ext_resource type="PackedScene" uid="uid://djmmwm6yrh14n" path="res://map/world_1.tscn" id="2_world"]
+[ext_resource type="Script" path="res://story/story.gd" id="3_story"]
 
-[node name="Root" type="Node3D" unique_id=411516434 node_paths=PackedStringArray("current_world", "current_controller")]
+[node name="Root" type="Node3D" unique_id=411516434 node_paths=PackedStringArray("story", "current_world", "current_controller")]
 script = ExtResource("1_root")
+story = NodePath("Story")
 current_world = NodePath("World1")
 current_controller = NodePath("World1/Player")
+
+[node name="Story" type="Node" parent="." groups=["story"]]
+script = ExtResource("3_story")
 
 [node name="World1" parent="." instance=ExtResource("2_world")]

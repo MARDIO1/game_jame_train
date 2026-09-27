@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://interactables/computer/os/computer_os.gd" id="1_os"]
 [ext_resource type="Theme" path="res://interactables/computer/os/theme/computer_theme.tres" id="2_theme"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/start.svg" id="4_start"]
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/volume.svg" id="5_volume"]
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/cursor.svg" id="6_cursor"]
+[ext_resource type="Texture2D" path="res://interactables/computer/os/art/chat.svg" id="7_chat"]
 
 [node name="ComputerOS" type="Control"]
 layout_mode = 0
@@ -39,6 +40,16 @@ offset_bottom = 78.0
 theme_type_variation = &"FileEntryButton"
 icon = ExtResource("3_folder")
 text = "文件管理器"
+
+[node name="ChatButton" type="Button" parent="Desktop"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 86.0
+offset_right = 178.0
+offset_bottom = 146.0
+theme_type_variation = &"FileEntryButton"
+icon = ExtResource("7_chat")
+text = "聊天软件.exe"
 
 [node name="WindowLayer" type="Control" parent="."]
 layout_mode = 1

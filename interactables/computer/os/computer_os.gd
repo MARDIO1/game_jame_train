@@ -7,8 +7,10 @@ const APP_WINDOW_SCENE: PackedScene = preload("res://interactables/computer/os/a
 const FILE_MANAGER_SCENE: PackedScene = preload("res://interactables/computer/os/apps/file_manager.tscn")
 const TEXT_VIEWER_SCENE: PackedScene = preload("res://interactables/computer/os/apps/text_viewer.tscn")
 const IMAGE_VIEWER_SCENE: PackedScene = preload("res://interactables/computer/os/apps/image_viewer.tscn")
+const CHAT_APP_SCENE: PackedScene = preload("res://interactables/computer/os/apps/chat_app.tscn")
 
 @onready var file_manager_button: Button = $Desktop/FileManagerButton
+@onready var chat_button: Button = $Desktop/ChatButton
 @onready var window_layer: Control = $WindowLayer
 @onready var custom_cursor: TextureRect = $CustomCursor
 #endregion
@@ -25,6 +27,7 @@ var admin_password: String
 var windows: Dictionary = {}
 #内置程序数组
 var apps: Dictionary = {}
+var story: Story
 #endregion
 
 #region 生命周期
@@ -32,6 +35,7 @@ var apps: Dictionary = {}
 ## 连接桌面入口，并在电脑未接管控制时隐藏自定义鼠标。
 func _ready() -> void:
 	file_manager_button.pressed.connect(_open_file_manager)
+	chat_button.pressed.connect(_open_chat)
 	custom_cursor.hide()
 
 
@@ -39,6 +43,8 @@ func _ready() -> void:
 func setup(root_path: String, password: String) -> void:
 	disk_root = root_path.trim_suffix("/")
 	admin_password = password
+	story = get_tree().get_first_node_in_group("story") as Story
+	assert(story != null, "ComputerOS 找不到跨世界 Story")
 	assert(DirAccess.open(disk_root) != null, "Computer 硬盘目录不存在: %s" % disk_root)
 #endregion
 
@@ -69,8 +75,14 @@ func _open_file_manager() -> void:
 		open_signal.connect(_open_file)
 
 
+## 打开初始安装的聊天软件，并绑定跨世界聊天记录。
+func _open_chat() -> void:
+	var chat_app: Control = _get_or_create_app("chat", "聊天软件", CHAT_APP_SCENE, Vector2(760.0, 420.0))
+	chat_app.call("setup", story)
+
+
 ## 创建软件及通用窗口；同一软件再次打开时复用原窗口。
-func _get_or_create_app(app_id: String, title: String, app_scene: PackedScene) -> Control:
+func _get_or_create_app(app_id: String, title: String, app_scene: PackedScene, window_size: Vector2 = Vector2(450.0, 300.0)) -> Control:
 	if apps.has(app_id):
 		var existing_window: AppWindowType = windows[app_id] as AppWindowType
 		existing_window.open_window(title)
@@ -78,11 +90,15 @@ func _get_or_create_app(app_id: String, title: String, app_scene: PackedScene) -
 	var app_window: AppWindowType = APP_WINDOW_SCENE.instantiate() as AppWindowType
 	var app: Control = app_scene.instantiate() as Control
 	window_layer.add_child(app_window)
+	app_window.size = window_size
 	var window_index: int = windows.size() % 4
-	app_window.position = Vector2(
+	var next_position: Vector2 = Vector2(
 		16.0 + float(window_index % 2) * 478.0,
 		12.0 + float(floori(float(window_index) / 2.0)) * 184.0
 	)
+	next_position.x = minf(next_position.x, window_layer.size.x - window_size.x)
+	next_position.y = minf(next_position.y, window_layer.size.y - window_size.y)
+	app_window.position = next_position
 	app_window.set_content(app)
 	app_window.open_window(title)
 	windows[app_id] = app_window

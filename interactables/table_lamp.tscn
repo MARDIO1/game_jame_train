@@ -49,11 +49,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04, 0)
 mesh = SubResource("Mesh_shade")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Visual"]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.95, 0)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.82, 0.12)
 light_color = Color(1, 0.84, 0.62, 1)
-light_energy = 4.0
+light_energy = 8.0
 shadow_enabled = true
-spot_range = 4.0
+spot_range = 5.0
 spot_angle = 42.0
 
 [node name="Body" type="StaticBody3D" parent="."]

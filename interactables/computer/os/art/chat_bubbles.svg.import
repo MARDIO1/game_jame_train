@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw3f7w80kajq2"
-path="res://.godot/imported/image.png-e5918039d9f81978565ed0d52e66f9d0.ctex"
+uid="uid://7fc5got6202o"
+path="res://.godot/imported/chat_bubbles.svg-b004bc2b72cda6984bee971a0bedcbb9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tests/image.png"
-dest_files=["res://.godot/imported/image.png-e5918039d9f81978565ed0d52e66f9d0.ctex"]
+source_file="res://interactables/computer/os/art/chat_bubbles.svg"
+dest_files=["res://.godot/imported/chat_bubbles.svg-b004bc2b72cda6984bee971a0bedcbb9.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

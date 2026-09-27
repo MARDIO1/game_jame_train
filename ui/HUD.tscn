@@ -86,6 +86,7 @@ border_color = Color(1, 1, 1, 1)
 
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
+layer = 100
 script = ExtResource("3_hud")
 empty_hand_icon = ExtResource("5_empty_hand")
 

@@ -5,10 +5,12 @@ extends Node3D
 const SaveDataType = preload("res://save/save_data.gd")
 const SAVE_DIRECTORY: String = "user://save"
 const SAVE_DATA_PATH: String = "user://save/save.tres"
+const STORY_SAVE_PATH: String = "user://save/story.tscn"
 const WORLD_SAVE_PATH: String = "user://save/world_%d.tscn"
 const WORLD_SOURCE_PATH: String = "res://map/world_%d.tscn"
 
 @export var current_world_number: int = 1
+@export var story: Story
 @export var current_world: Node3D
 @export var current_controller: Node
 @export var previous_controller: Node
@@ -108,6 +110,9 @@ func save_game() -> Error:
 	var world_error: Error = _save_current_world()
 	if world_error != OK:
 		return world_error
+	var story_error: Error = _save_story()
+	if story_error != OK:
+		return story_error
 	var save_data: SaveDataType = SaveDataType.new()
 	save_data.current_world_number = current_world_number
 	save_data.current_controller_path = current_world.get_path_to(current_controller)
@@ -123,6 +128,9 @@ func load_game() -> Error:
 	if not ResourceLoader.exists(SAVE_DATA_PATH):
 		return ERR_FILE_NOT_FOUND
 	var save_data: SaveDataType = ResourceLoader.load(SAVE_DATA_PATH, "", ResourceLoader.CACHE_MODE_REPLACE) as SaveDataType
+	var story_error: Error = _load_story()
+	if story_error != OK:
+		return story_error
 	return _replace_world(save_data.current_world_number, save_data.current_controller_path, save_data.previous_controller_path)
 
 
@@ -143,6 +151,28 @@ func _save_current_world() -> Error:
 	if pack_error != OK:
 		return pack_error
 	return ResourceSaver.save(packed_world, WORLD_SAVE_PATH % current_world_number)
+
+
+## 将跨世界 Story 独立保存为场景，使聊天记录不随 World 切换丢失。
+func _save_story() -> Error:
+	var packed_story: PackedScene = PackedScene.new()
+	var pack_error: Error = packed_story.pack(story)
+	if pack_error != OK:
+		return pack_error
+	return ResourceSaver.save(packed_story, STORY_SAVE_PATH)
+
+
+## 用存档中的 Story 替换初始状态；旧世界随后一并重载并重新绑定它。
+func _load_story() -> Error:
+	if not ResourceLoader.exists(STORY_SAVE_PATH):
+		return OK
+	var packed_story: PackedScene = ResourceLoader.load(STORY_SAVE_PATH, "", ResourceLoader.CACHE_MODE_REPLACE) as PackedScene
+	var next_story: Story = packed_story.instantiate() as Story
+	remove_child(story)
+	story.queue_free()
+	add_child(next_story)
+	story = next_story
+	return OK
 
 
 ## 用存档世界或项目原始世界替换当前世界。

@@ -1,4 +1,4 @@
-"""裁切用户的 Windows 图标表，并输出像素对齐的矢量 SVG。"""
+"""裁切用户提供的电脑图标表，并输出像素对齐的矢量 SVG。"""
 
 from __future__ import annotations
 
@@ -10,13 +10,20 @@ import cairosvg
 from PIL import Image
 
 
-ICONS = {
+WINDOWS_ICONS = {
     "folder": ((28, 64, 148, 169), 48, 48),
     "text": ((176, 60, 275, 168), 48, 48),
     "image": ((299, 62, 410, 169), 48, 48),
     "start": ((32, 197, 140, 301), 24, 24),
     "volume": ((164, 195, 280, 312), 24, 24),
     "cursor": ((439, 190, 549, 312), 24, 32),
+}
+
+CHAT_ICONS = {
+    "chat_person": ((0, 0, 168, 168), 64, 64),
+    "chat_unknown": ((168, 0, 337, 168), 64, 64),
+    "chat": ((0, 168, 168, 337), 48, 48),
+    "chat_bubbles": ((168, 168, 337, 337), 64, 64),
 }
 
 
@@ -105,12 +112,12 @@ def flatten(image: Image.Image) -> Image.Image:
 def main() -> None:
     """读取图标表，裁切六个图标并写入目标目录。"""
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("source", nargs="?", type=Path, help="原始图标表 PNG")
     parser.add_argument(
-        "source",
-        nargs="?",
-        type=Path,
-        default=Path("tests/image.png"),
-        help="原始 4×4 图标 PNG，默认 tests/image.png",
+        "--preset",
+        choices=("windows", "chat"),
+        default="windows",
+        help="图标表布局，默认 windows",
     )
     parser.add_argument(
         "--output",
@@ -119,15 +126,17 @@ def main() -> None:
         help="SVG 输出目录",
     )
     args = parser.parse_args()
-    if not args.source.is_file():
-        raise SystemExit(f"找不到图标原图：{args.source}")
+    source_path = args.source or Path(
+        "tests/talk_icon.png" if args.preset == "chat" else "tests/image.png"
+    )
+    if not source_path.is_file():
+        raise SystemExit(f"找不到图标原图：{source_path}")
 
-    source = Image.open(args.source).convert("RGBA")
-    if source.width < 550 or source.height < 560:
-        raise SystemExit(f"图标原图尺寸过小：{source.width}×{source.height}")
+    source = Image.open(source_path).convert("RGBA")
+    icons = CHAT_ICONS if args.preset == "chat" else WINDOWS_ICONS
     args.output.mkdir(parents=True, exist_ok=True)
 
-    for name, (box, width, height) in ICONS.items():
+    for name, (box, width, height) in icons.items():
         raw_crop = source.crop(box)
         reference = resize_nearest(raw_crop, width, height)
         crop = clean_alpha(raw_crop)
