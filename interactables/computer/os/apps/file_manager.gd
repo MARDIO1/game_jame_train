@@ -11,11 +11,13 @@ const IMAGE_ICON: Texture2D = preload("res://interactables/computer/os/art/image
 @onready var back_button: Button = $Toolbar/BackButton
 @onready var path_label: Label = $Toolbar/Path
 @onready var c_drive_button: Button = $Drives/CDriveButton
+@onready var d_drive_button: Button = $Drives/DDriveButton
 @onready var entries: VBoxContainer = $EntriesScroll/Entries
 #endregion
 
 #region 文件
 var disk_root: String
+var usb_root: String
 var current_path: String
 
 
@@ -27,6 +29,22 @@ func set_disk_root(path: String) -> void:
 	disk_root = next_root
 	current_path = disk_root
 	_refresh_entries()
+
+
+## 显示 D 盘并记录当前 U 盘真实目录。
+func mount_usb(path: String) -> void:
+	usb_root = path.trim_suffix("/")
+	d_drive_button.show()
+	d_drive_button.disabled = false
+
+
+## 隐藏 D 盘；正在浏览 U 盘时先返回 C 盘。
+func unmount_usb() -> void:
+	if not usb_root.is_empty() and current_path.begins_with(usb_root):
+		_open_disk_root()
+	usb_root = ""
+	d_drive_button.hide()
+	d_drive_button.disabled = true
 
 
 ## 读取当前真实目录，先显示文件夹，再显示支持的文件。
@@ -85,6 +103,7 @@ func _open_entry(path: String, is_directory: bool) -> void:
 func _ready() -> void:
 	back_button.pressed.connect(_go_back)
 	c_drive_button.pressed.connect(_open_disk_root)
+	d_drive_button.pressed.connect(_open_usb_root)
 
 
 ## 从任意子目录直接返回 C 盘根目录。
@@ -93,9 +112,16 @@ func _open_disk_root() -> void:
 	_refresh_entries()
 
 
+## 打开当前插入 U 盘的根目录。
+func _open_usb_root() -> void:
+	current_path = usb_root
+	_refresh_entries()
+
+
 ## 返回上一级，但不允许离开当前 C 盘根目录。
 func _go_back() -> void:
-	if current_path == disk_root:
+	var current_root: String = usb_root if not usb_root.is_empty() and current_path.begins_with(usb_root) else disk_root
+	if current_path == current_root:
 		return
 	current_path = current_path.get_base_dir()
 	_refresh_entries()
@@ -103,6 +129,8 @@ func _go_back() -> void:
 
 ## 将真实 res 路径转换为用户看到的 Windows C 盘路径。
 func _update_path() -> void:
-	var relative_path: String = current_path.trim_prefix(disk_root).trim_prefix("/").replace("/", "\\")
-	path_label.text = "C:\\" + relative_path
+	var on_usb: bool = not usb_root.is_empty() and current_path.begins_with(usb_root)
+	var current_root: String = usb_root if on_usb else disk_root
+	var relative_path: String = current_path.trim_prefix(current_root).trim_prefix("/").replace("/", "\\")
+	path_label.text = ("D:\\" if on_usb else "C:\\") + relative_path
 #endregion

@@ -65,7 +65,7 @@ signal interacted(interactor: Node3D)
 
 
 ## 返回 HUD 应显示的动作文字。
-func get_interact_hint() -> String:
+func get_interact_hint(_interactor: Node3D = null) -> String:
 	return interact_hint
 
 ## 接收交互者并发出供具体物体监听的交互信号。

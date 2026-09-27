@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://djmmwm6yrh14n"]
+[gd_scene load_steps=9 format=3 uid="uid://djmmwm6yrh14n"]
 
 [ext_resource type="PackedScene" uid="uid://beu2pqhv21kel" path="res://actor/player.tscn" id="1_oonqn"]
 [ext_resource type="PackedScene" uid="uid://66pltxegjbx8" path="res://interactables/computer/computer.tscn" id="2_computer"]
 [ext_resource type="PackedScene" uid="uid://b14lxw02x8s16" path="res://ui/HUD.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://interactables/table_lamp.tscn" id="4_lamp"]
+[ext_resource type="PackedScene" path="res://interactables/U_disk/usb_drive.tscn" id="5_usb"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_o3h3q"]
 size = Vector3(10, 1, 10)
@@ -30,6 +32,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3304923, 0)
 
 [node name="Computer" parent="." instance=ExtResource("2_computer")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -1.3)
+
+[node name="TableLamp" parent="." instance=ExtResource("4_lamp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.65, 1.2, -0.95)
+
+[node name="UsbDrive" parent="." instance=ExtResource("5_usb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 2.05, -1.1)
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
 

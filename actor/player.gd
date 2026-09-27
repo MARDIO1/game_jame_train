@@ -36,6 +36,8 @@ var current_interactable: InteractableType
 func _update_interactable() -> void:
 	var next_interactable: InteractableType = interact_ray.get_collider() as InteractableType
 	if next_interactable == current_interactable:
+		if current_interactable != null:
+			interact_hint_changed.emit(current_interactable.get_interact_hint(self))
 		return
 	if current_interactable != null:
 		current_interactable.set_highlighted(false)
@@ -44,7 +46,7 @@ func _update_interactable() -> void:
 		interact_hint_changed.emit("")
 	else:
 		current_interactable.set_highlighted(true)
-		interact_hint_changed.emit(current_interactable.get_interact_hint())
+		interact_hint_changed.emit(current_interactable.get_interact_hint(self))
 #endregion
 
 #region 视角
@@ -53,11 +55,9 @@ const MOUSE_SENSITIVITY_RAD_PER_PIXEL: float = 0.002
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-## 优先处理鼠标视角；Esc 释放鼠标，左键重新捕获。
+## 优先处理鼠标视角；菜单和背包关闭时左键可重新捕获鼠标。
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("escape"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	elif event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY_RAD_PER_PIXEL)

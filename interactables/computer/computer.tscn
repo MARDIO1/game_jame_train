@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://66pltxegjbx8"]
+[gd_scene load_steps=13 format=3 uid="uid://66pltxegjbx8"]
 
 [ext_resource type="Script" path="res://interactables/computer/computer.gd" id="1_computer"]
 [ext_resource type="Script" path="res://interactables/interactable.gd" id="2_interactable"]
 [ext_resource type="PackedScene" path="res://interactables/computer/os/computer_os.tscn" id="3_os"]
+[ext_resource type="Script" path="res://interactables/computer/usb_port.gd" id="4_usb_port"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
 albedo_color = Color(0.16, 0.18, 0.2, 1)
@@ -22,6 +23,17 @@ size = Vector3(0.82, 1.7, 0.25)
 
 [sub_resource type="BoxShape3D" id="Shape_interact"]
 size = Vector3(0.92, 1.8, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="Material_port"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="Mesh_port"]
+material = SubResource("Material_port")
+size = Vector3(0.24, 0.08, 0.05)
+
+[sub_resource type="BoxShape3D" id="Shape_port"]
+size = Vector3(0.32, 0.18, 0.16)
 
 [node name="Computer" type="Node3D" node_paths=PackedStringArray("control_camera", "computer_view") groups=["controller"]]
 script = ExtResource("1_computer")
@@ -87,3 +99,16 @@ outline_width_px = 3.0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
 shape = SubResource("Shape_interact")
+
+[node name="UsbPort" type="Area3D" parent="." node_paths=PackedStringArray("highlight_root")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, -0.82, 0.18)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("4_usb_port")
+highlight_root = NodePath("Visual")
+
+[node name="Visual" type="MeshInstance3D" parent="UsbPort"]
+mesh = SubResource("Mesh_port")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UsbPort"]
+shape = SubResource("Shape_port")

@@ -18,6 +18,7 @@ const IMAGE_VIEWER_SCENE: PackedScene = preload("res://interactables/computer/os
 var is_active: bool = false
 #
 var disk_root: String
+var usb_root: String
 #管理员密码
 var admin_password: String
 #窗口数组
@@ -61,6 +62,8 @@ func set_cursor(cursor_position: Vector2, inside_screen: bool) -> void:
 func _open_file_manager() -> void:
 	var file_manager: Control = _get_or_create_app("file_manager", "文件管理器", FILE_MANAGER_SCENE)
 	file_manager.call("set_disk_root", disk_root)
+	if not usb_root.is_empty():
+		file_manager.call("mount_usb", usb_root)
 	var open_signal: Signal = file_manager.get("file_open_requested")
 	if not open_signal.is_connected(_open_file):
 		open_signal.connect(_open_file)
@@ -103,12 +106,17 @@ func _open_file(path: String) -> void:
 
 #region 插U盘
 
-## 预留 U 盘挂载接口；安装功能实现时接入文件管理器。
-func mount_usb(_root_path: String) -> void:
-	pass
+## 挂载 U 盘目录；文件管理器已打开时立即显示 D 盘。
+func mount_usb(root_path: String) -> void:
+	usb_root = root_path.trim_suffix("/")
+	assert(DirAccess.open(usb_root) != null, "U盘目录不存在: %s" % usb_root)
+	if apps.has("file_manager"):
+		(apps["file_manager"] as Control).call("mount_usb", usb_root)
 
 
-## 预留 U 盘卸载接口。
+## 卸载 U 盘，并同步已经打开的文件管理器。
 func unmount_usb() -> void:
-	pass
+	usb_root = ""
+	if apps.has("file_manager"):
+		(apps["file_manager"] as Control).call("unmount_usb")
 #endregion

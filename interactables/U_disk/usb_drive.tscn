@@ -1,0 +1,49 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://interactables/U_disk/usb_drive.gd" id="1_usb"]
+[ext_resource type="Script" path="res://interactables/interactable.gd" id="2_interactable"]
+[ext_resource type="Texture2D" path="res://ui/world_1/art/usb_drive.png" id="3_icon"]
+
+[sub_resource type="StandardMaterial3D" id="Material_body"]
+albedo_color = Color(0.12, 0.16, 0.2, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Material_plug"]
+albedo_color = Color(0.65, 0.68, 0.7, 1)
+metallic = 0.8
+roughness = 0.32
+
+[sub_resource type="BoxMesh" id="Mesh_body"]
+material = SubResource("Material_body")
+size = Vector3(0.2, 0.08, 0.34)
+
+[sub_resource type="BoxMesh" id="Mesh_plug"]
+material = SubResource("Material_plug")
+size = Vector3(0.15, 0.06, 0.16)
+
+[sub_resource type="BoxShape3D" id="Shape_interact"]
+size = Vector3(0.28, 0.16, 0.58)
+
+[node name="UsbDrive" type="Node3D"]
+script = ExtResource("1_usb")
+inventory_icon = ExtResource("3_icon")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visual"]
+mesh = SubResource("Mesh_body")
+
+[node name="Plug" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25)
+mesh = SubResource("Mesh_plug")
+
+[node name="Interactable" type="Area3D" parent="." node_paths=PackedStringArray("highlight_root")]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_interactable")
+interact_hint = "拾取U盘"
+highlight_root = NodePath("../Visual")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.08)
+shape = SubResource("Shape_interact")

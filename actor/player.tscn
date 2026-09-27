@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://beu2pqhv21kel"]
 
 [ext_resource type="Script" uid="uid://lplewb3h8yyb" path="res://actor/player.gd" id="1_pcoxj"]
+[ext_resource type="Script" uid="uid://bu8s21ru6fn2r" path="res://actor/inventory.gd" id="2_inventory"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4q64g"]
 radius = 0.4
@@ -10,7 +11,7 @@ height = 1.8
 radius = 0.4
 height = 1.8
 
-[node name="Player" type="CharacterBody3D" unique_id=1055697178 node_paths=PackedStringArray("control_camera") groups=["controller"]]
+[node name="Player" type="CharacterBody3D" unique_id=1055697178 node_paths=PackedStringArray("control_camera") groups=["controller", "player"]]
 script = ExtResource("1_pcoxj")
 control_camera = NodePath("Head/Camera3D")
 
@@ -19,6 +20,9 @@ shape = SubResource("CapsuleShape3D_4q64g")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=959144104]
 mesh = SubResource("CapsuleMesh_4q64g")
+
+[node name="Inventory" type="Node" parent="." unique_id=2144058158]
+script = ExtResource("2_inventory")
 
 [node name="Head" type="Node3D" parent="." unique_id=282353469]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
