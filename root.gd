@@ -102,7 +102,7 @@ func _return_to_previous_controller() -> void:
 
 ## 将当前世界和 Root 的全局状态写入唯一存档。
 func save_game() -> Error:
-	if is_transitioning:
+	if is_transitioning or _world_has_busy_controller():
 		return ERR_BUSY
 	var directory_error: Error = DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(SAVE_DIRECTORY))
 	if directory_error != OK:
@@ -119,6 +119,14 @@ func save_game() -> Error:
 	if previous_controller != null and current_world.is_ancestor_of(previous_controller):
 		save_data.previous_controller_path = current_world.get_path_to(previous_controller)
 	return ResourceSaver.save(save_data, SAVE_DATA_PATH)
+
+
+## 启动电脑等 Controller 内部过渡期间禁止保存。
+func _world_has_busy_controller() -> bool:
+	for controller: Node in get_tree().get_nodes_in_group("controller"):
+		if current_world.is_ancestor_of(controller) and controller.has_method("is_busy") and controller.call("is_busy"):
+			return true
+	return false
 
 
 ## 从唯一存档恢复当前世界及 Controller 引用。

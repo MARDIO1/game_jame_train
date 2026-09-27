@@ -9,6 +9,7 @@ extends Node3D
 #所有的viewer丢给界，世界给player看什么就看什么！
 
 signal control_requested(controller: Node)
+signal game_launch_requested(computer: Node)
 const InteractableType = preload("res://interactables/interactable.gd")
 const ComputerOSType = preload("res://interactables/computer/os/computer_os.gd")
 
@@ -16,11 +17,17 @@ const ComputerOSType = preload("res://interactables/computer/os/computer_os.gd")
 @export var computer_view: SubViewportContainer
 @export_dir var disk_root: String = "res://computer_content/computer_01/C"
 @export var admin_password: String = "admin"
+@export var game_installed: bool = false
+@export var is_powered_on: bool = false
+@export var auto_start_once: bool = false
 
 @onready var interactable: InteractableType = $Interactable
 @onready var screen: MeshInstance3D = $Visual/Screen
 @onready var sub_viewport: SubViewport = $ComputerLayer/ComputerView/SubViewport
 @onready var computer_os: ComputerOSType = $ComputerLayer/ComputerView/SubViewport/ComputerOS
+@onready var boot_audio: AudioStreamPlayer3D = $BootAudio
+
+var auto_power_on_pending: bool = false
 #endregion
 
 #region 生命周期
@@ -28,8 +35,21 @@ const ComputerOSType = preload("res://interactables/computer/os/computer_os.gd")
 ## 连接电脑自己的交互节点，并初始化它的内部系统。
 func _ready() -> void:
 	interactable.interacted.connect(_on_interactable_interacted)
-	computer_os.setup(disk_root, admin_password)
+	computer_os.game_installed.connect(func() -> void: game_installed = true)
+	computer_os.game_launch_requested.connect(func() -> void: game_launch_requested.emit(self))
+	computer_os.power_off_requested.connect(power_off)
+	computer_os.boot_finished.connect(boot_audio.play)
+	computer_os.setup(disk_root, admin_password, game_installed, is_powered_on)
 	_setup_screen_texture()
+	if auto_start_once:
+		auto_start_once = false
+		auto_power_on_pending = true
+		_request_initial_control.call_deferred()
+
+
+## 等 Root 连接控制请求后，再触发新游戏唯一一次自动进入电脑。
+func _request_initial_control() -> void:
+	control_requested.emit(self)
 
 
 ## 鼠标离开电脑画面时只隐藏虚拟指针，不移动真实鼠标。
@@ -78,9 +98,44 @@ func set_controlled(active: bool) -> void:
 	if active:
 		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 		_update_cursor(get_viewport().get_mouse_position())
+		if auto_power_on_pending:
+			auto_power_on_pending = false
+			power_on()
 
 
 ## 将通用交互转换为 Root 可处理的 Controller 请求。
 func _on_interactable_interacted(_interactor: Node3D) -> void:
 	control_requested.emit(self)
+#endregion
+
+#region 电源
+
+## 实体电源按钮使用同一入口切换开关机状态。
+func toggle_power() -> void:
+	if is_powered_on:
+		power_off()
+	else:
+		power_on()
+
+
+## 通电并让 OS 播放完整启动过程。
+func power_on() -> void:
+	if is_powered_on:
+		return
+	is_powered_on = true
+	computer_os.boot()
+
+
+## 关机但不改变当前 Controller；屏幕与相机继续存在。
+func power_off() -> void:
+	if not is_powered_on:
+		return
+	is_powered_on = false
+	boot_audio.stop()
+	computer_os.shutdown()
+
+
+## Root 保存前查询启动过渡是否已经结束。
+func is_busy() -> bool:
+	return computer_os.is_busy()
 #endregion

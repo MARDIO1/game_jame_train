@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://interactables/computer/os/computer_os.gd" id="1_os"]
 [ext_resource type="Theme" path="res://interactables/computer/os/theme/computer_theme.tres" id="2_theme"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/volume.svg" id="5_volume"]
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/cursor.svg" id="6_cursor"]
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/chat.svg" id="7_chat"]
+[ext_resource type="Texture2D" path="res://interactables/computer/os/art/game.svg" id="8_game"]
 
 [node name="ComputerOS" type="Control"]
 layout_mode = 0
@@ -39,7 +40,7 @@ offset_right = 178.0
 offset_bottom = 78.0
 theme_type_variation = &"FileEntryButton"
 icon = ExtResource("3_folder")
-text = "文件管理器"
+text = "文件管理器.exe.ink"
 
 [node name="ChatButton" type="Button" parent="Desktop"]
 layout_mode = 0
@@ -49,7 +50,34 @@ offset_right = 178.0
 offset_bottom = 146.0
 theme_type_variation = &"FileEntryButton"
 icon = ExtResource("7_chat")
-text = "聊天软件.exe"
+text = "聊天软件.exe.ink"
+
+[node name="GameButton" type="Button" parent="Desktop"]
+visible = false
+layout_mode = 0
+offset_left = 18.0
+offset_top = 154.0
+offset_right = 178.0
+offset_bottom = 214.0
+theme_type_variation = &"FileEntryButton"
+icon = ExtResource("8_game")
+text = "Game jam游戏.exe.ink"
+
+[node name="DesktopFilesScroll" type="ScrollContainer" parent="Desktop"]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 18.0
+offset_right = 944.0
+offset_bottom = 482.0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="DesktopFiles" type="GridContainer" parent="Desktop/DesktopFilesScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
 
 [node name="WindowLayer" type="Control" parent="."]
 layout_mode = 1
@@ -106,6 +134,31 @@ text = "17:20"
 horizontal_alignment = 2
 vertical_alignment = 1
 
+[node name="StartMenu" type="Panel" parent="."]
+z_index = 50
+offset_left = 5.0
+offset_top = 370.0
+offset_right = 225.0
+offset_bottom = 500.0
+
+[node name="Title" type="Label" parent="StartMenu"]
+offset_left = 16.0
+offset_top = 10.0
+offset_right = 204.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 24
+text = "开始"
+vertical_alignment = 1
+
+[node name="Shutdown" type="Button" parent="StartMenu"]
+offset_left = 16.0
+offset_top = 58.0
+offset_right = 106.0
+offset_bottom = 108.0
+theme_type_variation = &"WindowButton"
+theme_override_font_sizes/font_size = 24
+text = "关机"
+
 [node name="CustomCursor" type="TextureRect" parent="."]
 z_index = 100
 offset_right = 24.0
@@ -114,3 +167,30 @@ mouse_filter = 2
 texture = ExtResource("6_cursor")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="BootScreen" type="ColorRect" parent="."]
+z_index = 200
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Text" type="RichTextLabel" parent="BootScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 56.0
+offset_top = 34.0
+offset_right = -40.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/normal_font_size = 23
+scroll_active = true
+scroll_following = true

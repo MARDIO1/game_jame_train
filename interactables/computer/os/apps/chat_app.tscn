@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://interactables/computer/os/apps/chat_app.gd" id="1_chat"]
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/chat_person.svg" id="2_person"]
 [ext_resource type="Texture2D" path="res://interactables/computer/os/art/chat_unknown.svg" id="3_unknown"]
+[ext_resource type="Theme" path="res://interactables/computer/os/theme/computer_theme.tres" id="4_theme"]
 
 [sub_resource type="StyleBoxFlat" id="ContactNormal"]
 bg_color = Color(0.97, 0.97, 0.97, 1)
@@ -49,12 +50,10 @@ border_width_bottom = 2
 border_color = Color(0.05, 0.05, 0.05, 1)
 
 [node name="ChatApp" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_right = 756.0
+offset_bottom = 378.0
+theme = ExtResource("4_theme")
 script = ExtResource("1_chat")
 
 [node name="Contacts" type="Panel" parent="."]
@@ -107,6 +106,7 @@ offset_top = 8.0
 offset_right = 172.0
 offset_bottom = 48.0
 mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 28
 text = "李哥"
 vertical_alignment = 1
@@ -118,6 +118,7 @@ offset_top = 48.0
 offset_right = 174.0
 offset_bottom = 78.0
 mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "○ 离线"
 vertical_alignment = 1
 
@@ -262,6 +263,7 @@ offset_bottom = -105.0
 grow_horizontal = 2
 grow_vertical = 2
 editable = false
+text = "[1:14]李哥：通讯软件左侧联系人可以交互。每个联系人有名字，在线状态对应其UI，鼠标悬停使其蓝底白字，点击后，右侧主页切换为对应人物及其对话历史记录。右侧有滑动条。\n[1:15]李哥：发送栏不应该是打字，而是选项。选项不应该超过2个。\n[17:20]李哥：我美术赶工做完了，你测一下"
 wrap_mode = 1
 scroll_fit_content_height = false
 

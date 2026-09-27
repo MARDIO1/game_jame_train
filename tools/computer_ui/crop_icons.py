@@ -26,6 +26,8 @@ CHAT_ICONS = {
     "chat_bubbles": ((168, 168, 337, 337), 64, 64),
 }
 
+APP_ICONS = {"setup": Path("tests/setup.png"), "game": Path("tests/game.png")}
+
 
 def clean_alpha(image: Image.Image) -> Image.Image:
     """使用原图透明通道去掉抗锯齿薄雾，不猜测黑色背景。"""
@@ -115,7 +117,7 @@ def main() -> None:
     parser.add_argument("source", nargs="?", type=Path, help="原始图标表 PNG")
     parser.add_argument(
         "--preset",
-        choices=("windows", "chat"),
+        choices=("windows", "chat", "apps"),
         default="windows",
         help="图标表布局，默认 windows",
     )
@@ -126,18 +128,19 @@ def main() -> None:
         help="SVG 输出目录",
     )
     args = parser.parse_args()
-    source_path = args.source or Path(
-        "tests/talk_icon.png" if args.preset == "chat" else "tests/image.png"
-    )
-    if not source_path.is_file():
-        raise SystemExit(f"找不到图标原图：{source_path}")
-
-    source = Image.open(source_path).convert("RGBA")
+    source_path = args.source or Path("tests/talk_icon.png" if args.preset == "chat" else "tests/image.png")
     icons = CHAT_ICONS if args.preset == "chat" else WINDOWS_ICONS
     args.output.mkdir(parents=True, exist_ok=True)
 
-    for name, (box, width, height) in icons.items():
-        raw_crop = source.crop(box)
+    if args.preset == "apps":
+        crops = [(name, Image.open(path).convert("RGBA"), 64, 64) for name, path in APP_ICONS.items()]
+    else:
+        if not source_path.is_file():
+            raise SystemExit(f"找不到图标原图：{source_path}")
+        source = Image.open(source_path).convert("RGBA")
+        crops = [(name, source.crop(box), width, height) for name, (box, width, height) in icons.items()]
+
+    for name, raw_crop, width, height in crops:
         reference = resize_nearest(raw_crop, width, height)
         crop = clean_alpha(raw_crop)
         icon = resize_nearest(crop, width, height)

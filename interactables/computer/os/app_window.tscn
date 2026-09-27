@@ -1,12 +1,12 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://interactables/computer/os/app_window.gd" id="1_window"]
+[ext_resource type="Theme" path="res://interactables/computer/os/theme/computer_theme.tres" id="2_theme"]
 
 [node name="AppWindow" type="Panel"]
-offset_left = 16.0
-offset_top = 12.0
-offset_right = 466.0
-offset_bottom = 312.0
+offset_right = 450.0
+offset_bottom = 300.0
+theme = ExtResource("2_theme")
 script = ExtResource("1_window")
 
 [node name="TitleBar" type="ColorRect" parent="."]

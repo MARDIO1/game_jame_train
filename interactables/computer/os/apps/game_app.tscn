@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://interactables/computer/os/apps/game_app.gd" id="1_script"]
+[ext_resource type="Theme" path="res://interactables/computer/os/theme/computer_theme.tres" id="2_theme"]
+
+[node name="GameApp" type="Control"]
+offset_right = 446.0
+offset_bottom = 258.0
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Title" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 38.0
+offset_right = 426.0
+offset_bottom = 128.0
+theme_override_font_sizes/font_size = 28
+text = "Game jam游戏\nday3v2.0测试版3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Launch" type="Button" parent="."]
+offset_left = 143.0
+offset_top = 164.0
+offset_right = 303.0
+offset_bottom = 222.0
+theme_type_variation = &"WindowButton"
+theme_override_font_sizes/font_size = 27
+text = "进入游戏"

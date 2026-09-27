@@ -1,14 +1,18 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://interactables/computer/os/apps/file_manager.gd" id="1_file_manager"]
+[ext_resource type="Theme" path="res://interactables/computer/os/theme/computer_theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="HoverNameBackground"]
+bg_color = Color(0.04, 0.42, 0.62, 1)
+content_margin_left = 8.0
+content_margin_right = 8.0
 
 [node name="FileManager" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_right = 446.0
+offset_bottom = 258.0
+theme = ExtResource("2_theme")
 script = ExtResource("1_file_manager")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -98,9 +102,16 @@ offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
-vertical_scroll_mode = 1
+vertical_scroll_mode = 2
 
 [node name="Entries" type="VBoxContainer" parent="EntriesScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 3
+
+[node name="HoverName" type="Label" parent="."]
+visible = false
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("HoverNameBackground")
