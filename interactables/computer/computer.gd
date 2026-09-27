@@ -3,10 +3,6 @@
 
 #region 依赖
 extends Node3D
-#什么鬼玩意，player自己不是InteractableType，为什么要依赖？
-# player自己也不需要管理computeros，为什么要computeros?
-#computer应该管理自己的subviwer!
-#所有的viewer丢给界，世界给player看什么就看什么！
 
 signal control_requested(controller: Node)
 signal game_launch_requested(computer: Node)
@@ -15,7 +11,7 @@ const ComputerOSType = preload("res://interactables/computer/os/computer_os.gd")
 
 @export var control_camera: Camera3D
 @export var computer_view: SubViewportContainer
-@export_dir var disk_root: String = "res://computer_content/computer_01/C"
+@export_dir var disk_root: String = "res://interactables/computer/computer_content/computer_01/C"
 @export var admin_password: String = "admin"
 @export var game_installed: bool = false
 @export var is_powered_on: bool = false

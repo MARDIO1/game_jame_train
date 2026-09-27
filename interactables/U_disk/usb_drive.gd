@@ -6,7 +6,7 @@ extends Node3D
 @export var inventory_name: String = "U盘"
 @export_multiline var inventory_description: String = "舍友给了的U盘，看上去很有年代感。\n插入电脑应该可以拷贝一个游戏。"
 @export var inventory_icon: Texture2D
-@export_dir var disk_root: String = "res://computer_content/usb_01"
+@export_dir var disk_root: String = "res://interactables/computer/computer_content/usb_01"
 @export var in_inventory: bool = false
 @export var inserted: bool = false
 

@@ -8,6 +8,8 @@ const SAVE_DATA_PATH: String = "user://save/save.tres"
 const STORY_SAVE_PATH: String = "user://save/story.tscn"
 const WORLD_SAVE_PATH: String = "user://save/world_%d.tscn"
 const WORLD_SOURCE_PATH: String = "res://map/world_%d.tscn"
+const GAME_WORLD_NUMBER: int = 2
+const GAME_WORLD_ENTRY_CONTROLLER: NodePath = NodePath("ground/Player")
 
 @export var current_world_number: int = 1
 @export var story: Story
@@ -47,6 +49,10 @@ func _initialize_controllers() -> void:
 		controller.set_controlled(controller == current_controller)
 		if controller.has_signal("control_requested") and not controller.control_requested.is_connected(_on_control_requested):
 			controller.control_requested.connect(_on_control_requested)
+		if controller.has_signal("game_launch_requested"):
+			var launch_signal: Signal = controller.get("game_launch_requested")
+			if not launch_signal.is_connected(_on_game_launch_requested):
+				launch_signal.connect(_on_game_launch_requested)
 
 
 ## 返回 Controller 导出的控制摄像机。
@@ -96,6 +102,19 @@ func _return_to_previous_controller() -> void:
 	var next_controller: Node = previous_controller
 	previous_controller = null
 	await switch_controller(next_controller)
+
+
+## 电脑游戏按钮在当前输入处理结束后进入独立的游戏世界。
+func _on_game_launch_requested(_computer: Node) -> void:
+	if current_world_number == 1 and not is_transitioning:
+		_enter_game_world.call_deferred()
+
+
+## 保存现实世界，再从 world2 存档或源场景进入其 Player。
+func _enter_game_world() -> void:
+	var error: Error = switch_world(GAME_WORLD_NUMBER, GAME_WORLD_ENTRY_CONTROLLER)
+	if error != OK:
+		push_error("进入 world2 失败，错误码: %d" % error)
 #endregion
 
 #region 世界
@@ -104,7 +123,7 @@ func _return_to_previous_controller() -> void:
 func save_game() -> Error:
 	if is_transitioning or _world_has_busy_controller():
 		return ERR_BUSY
-	var directory_error: Error = DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(SAVE_DIRECTORY))
+	var directory_error: Error = _ensure_save_directory()
 	if directory_error != OK:
 		return directory_error
 	var world_error: Error = _save_current_world()
@@ -113,12 +132,7 @@ func save_game() -> Error:
 	var story_error: Error = _save_story()
 	if story_error != OK:
 		return story_error
-	var save_data: SaveDataType = SaveDataType.new()
-	save_data.current_world_number = current_world_number
-	save_data.current_controller_path = current_world.get_path_to(current_controller)
-	if previous_controller != null and current_world.is_ancestor_of(previous_controller):
-		save_data.previous_controller_path = current_world.get_path_to(previous_controller)
-	return ResourceSaver.save(save_data, SAVE_DATA_PATH)
+	return _save_root_state()
 
 
 ## 启动电脑等 Controller 内部过渡期间禁止保存。
@@ -144,12 +158,47 @@ func load_game() -> Error:
 
 ## 保存旧世界并切换到指定世界入口 Controller。
 func switch_world(world_number: int, controller_path: NodePath) -> Error:
-	if is_transitioning:
+	if is_transitioning or _world_has_busy_controller():
 		return ERR_BUSY
+	is_transitioning = true
+	var directory_error: Error = _ensure_save_directory()
+	if directory_error != OK:
+		is_transitioning = false
+		return directory_error
 	var save_error: Error = _save_current_world()
 	if save_error != OK:
+		is_transitioning = false
 		return save_error
-	return _replace_world(world_number, controller_path, NodePath())
+	var story_error: Error = _save_story()
+	if story_error != OK:
+		is_transitioning = false
+		return story_error
+	var replace_error: Error = _replace_world(world_number, controller_path, NodePath())
+	if replace_error != OK:
+		is_transitioning = false
+		return replace_error
+	var target_save_error: Error = _save_current_world()
+	if target_save_error != OK:
+		is_transitioning = false
+		return target_save_error
+	var root_save_error: Error = _save_root_state()
+	is_transitioning = false
+	return root_save_error
+
+
+## 确保唯一存档槽目录存在。
+func _ensure_save_directory() -> Error:
+	return DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(SAVE_DIRECTORY))
+
+
+## 记录当前世界编号及其 Controller 引用路径。
+func _save_root_state() -> Error:
+	var save_data: SaveDataType = SaveDataType.new()
+	save_data.current_world_number = current_world_number
+	save_data.current_controller_path = current_world.get_path_to(current_controller)
+	if previous_controller != null and current_world.is_ancestor_of(previous_controller):
+		save_data.previous_controller_path = current_world.get_path_to(previous_controller)
+	return ResourceSaver.save(save_data, SAVE_DATA_PATH)
 
 
 ## 将当前世界场景写入用户存档目录。

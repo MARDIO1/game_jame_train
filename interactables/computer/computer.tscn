@@ -1,11 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://66pltxegjbx8"]
+[gd_scene format=3 uid="uid://66pltxegjbx8"]
 
-[ext_resource type="Script" path="res://interactables/computer/computer.gd" id="1_computer"]
-[ext_resource type="Script" path="res://interactables/interactable.gd" id="2_interactable"]
+[ext_resource type="Script" uid="uid://mmq167u5d3gn" path="res://interactables/computer/computer.gd" id="1_computer"]
+[ext_resource type="Script" uid="uid://b0fnejk1c2cj8" path="res://interactables/interactable.gd" id="2_interactable"]
 [ext_resource type="PackedScene" path="res://interactables/computer/os/computer_os.tscn" id="3_os"]
-[ext_resource type="Script" path="res://interactables/computer/usb_port.gd" id="4_usb_port"]
-[ext_resource type="Script" path="res://interactables/computer/power_button.gd" id="5_power_button"]
-[ext_resource type="AudioStream" path="res://interactables/computer/audio/boot.wav" id="6_boot_audio"]
+[ext_resource type="Script" uid="uid://cl6lhmmy2kjou" path="res://interactables/computer/usb_port.gd" id="4_usb_port"]
+[ext_resource type="Script" uid="uid://t3grg56yb6e4" path="res://interactables/computer/power_button.gd" id="5_power_button"]
+[ext_resource type="AudioStream" uid="uid://bln0ebjkul211" path="res://interactables/computer/audio/boot.wav" id="6_boot_audio"]
 
 [sub_resource type="StandardMaterial3D" id="Material_body"]
 albedo_color = Color(0.16, 0.18, 0.2, 1)
@@ -13,7 +13,6 @@ roughness = 0.72
 
 [sub_resource type="StandardMaterial3D" id="Material_screen"]
 shading_mode = 0
-albedo_color = Color(1, 1, 1, 1)
 texture_filter = 0
 
 [sub_resource type="QuadMesh" id="Mesh_screen"]
@@ -48,98 +47,98 @@ size = Vector3(0.08, 0.05, 0.05)
 [sub_resource type="BoxShape3D" id="Shape_power"]
 size = Vector3(0.16, 0.14, 0.14)
 
-[node name="Computer" type="Node3D" node_paths=PackedStringArray("control_camera", "computer_view") groups=["controller"]]
+[node name="Computer" type="Node3D" unique_id=1952468497 node_paths=PackedStringArray("control_camera", "computer_view") groups=["controller"]]
 script = ExtResource("1_computer")
 control_camera = NodePath("Camera3D")
 computer_view = NodePath("ComputerLayer/ComputerView")
 
-[node name="Visual" type="Node3D" parent="."]
+[node name="Visual" type="Node3D" parent="." unique_id=461079540]
 
-[node name="Shell" type="CSGCombiner3D" parent="Visual"]
+[node name="Shell" type="CSGCombiner3D" parent="Visual" unique_id=1587010746]
 
-[node name="Monitor" type="CSGBox3D" parent="Visual/Shell"]
+[node name="Monitor" type="CSGBox3D" parent="Visual/Shell" unique_id=695445825]
 size = Vector3(0.82, 0.505, 0.1)
 material = SubResource("Material_body")
 
-[node name="Stand" type="CSGBox3D" parent="Visual/Shell"]
+[node name="Stand" type="CSGBox3D" parent="Visual/Shell" unique_id=585020032]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0)
 size = Vector3(0.1, 1.14, 0.1)
 material = SubResource("Material_body")
 
-[node name="Base" type="CSGBox3D" parent="Visual/Shell"]
+[node name="Base" type="CSGBox3D" parent="Visual/Shell" unique_id=218081707]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.375, 0)
 size = Vector3(0.5, 0.07, 0.3)
 material = SubResource("Material_body")
 
-[node name="Screen" type="MeshInstance3D" parent="Visual"]
+[node name="Screen" type="MeshInstance3D" parent="Visual" unique_id=2059713696]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.06)
 mesh = SubResource("Mesh_screen")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2012030747]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.62)
 fov = 53.13
 
-[node name="ComputerLayer" type="CanvasLayer" parent="."]
+[node name="ComputerLayer" type="CanvasLayer" parent="." unique_id=1734822979]
 layer = 5
 
-[node name="ComputerView" type="SubViewportContainer" parent="ComputerLayer"]
+[node name="ComputerView" type="SubViewportContainer" parent="ComputerLayer" unique_id=1629479851]
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 2.0
 offset_bottom = 2.0
 mouse_filter = 2
-stretch = false
 
-[node name="SubViewport" type="SubViewport" parent="ComputerLayer/ComputerView"]
+[node name="SubViewport" type="SubViewport" parent="ComputerLayer/ComputerView" unique_id=141895990]
+handle_input_locally = false
 size = Vector2i(960, 540)
 render_target_update_mode = 4
 
-[node name="ComputerOS" parent="ComputerLayer/ComputerView/SubViewport" instance=ExtResource("3_os")]
+[node name="ComputerOS" parent="ComputerLayer/ComputerView/SubViewport" unique_id=1636939143 instance=ExtResource("3_os")]
+layout_mode = 3
 
-[node name="BootAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="BootAudio" type="AudioStreamPlayer3D" parent="." unique_id=520065380]
 stream = ExtResource("6_boot_audio")
 volume_db = -5.0
 max_distance = 5.0
 
-[node name="Body" type="StaticBody3D" parent="."]
+[node name="Body" type="StaticBody3D" parent="." unique_id=1952554370]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body" unique_id=1298917522]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
 shape = SubResource("Shape_body")
 
-[node name="Interactable" type="Area3D" parent="." node_paths=PackedStringArray("highlight_root")]
+[node name="Interactable" type="Area3D" parent="." unique_id=784418471 node_paths=PackedStringArray("highlight_root")]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_interactable")
-interact_hint = "使用电脑"
 highlight_root = NodePath("../Visual/Shell")
-outline_width_px = 3.0
+interact_hint = "使用电脑"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable" unique_id=1893645754]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.55, 0)
 shape = SubResource("Shape_interact")
 
-[node name="UsbPort" type="Area3D" parent="." node_paths=PackedStringArray("highlight_root")]
+[node name="UsbPort" type="Area3D" parent="." unique_id=547664531 node_paths=PackedStringArray("highlight_root")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, -0.82, 0.18)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("4_usb_port")
 highlight_root = NodePath("Visual")
 
-[node name="Visual" type="MeshInstance3D" parent="UsbPort"]
+[node name="Visual" type="MeshInstance3D" parent="UsbPort" unique_id=1252318209]
 mesh = SubResource("Mesh_port")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="UsbPort"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UsbPort" unique_id=1244654422]
 shape = SubResource("Shape_port")
 
-[node name="PowerButton" type="Area3D" parent="." node_paths=PackedStringArray("highlight_root")]
+[node name="PowerButton" type="Area3D" parent="." unique_id=1884807654 node_paths=PackedStringArray("highlight_root")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, -0.82, 0.2)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("5_power_button")
 highlight_root = NodePath("Visual")
 
-[node name="Visual" type="MeshInstance3D" parent="PowerButton"]
+[node name="Visual" type="MeshInstance3D" parent="PowerButton" unique_id=2070606537]
 mesh = SubResource("Mesh_power")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PowerButton"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PowerButton" unique_id=1700819957]
 shape = SubResource("Shape_power")

@@ -9,12 +9,13 @@ size = Vector3(10, 1, 10)
 [sub_resource type="BoxShape3D" id="BoxShape3D_4vo8a"]
 size = Vector3(10, 1, 10)
 
-[node name="World2" type="Node2D" unique_id=772028756]
+[node name="World2" type="Node3D" unique_id=772028756]
 
 [node name="ground" type="StaticBody3D" parent="." unique_id=361307933]
 
 [node name="Computer" parent="ground" unique_id=201687009 instance=ExtResource("1_lcwtf")]
 transform = Transform3D(-0.64740723, 0, 0.76214427, 0, 1, 0, -0.76214427, 0, -0.64740723, 1.711617, 1.8158545, -1.3)
+disk_root = "res://interactables/computer/computer_content/computer_02/C"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ground" unique_id=1468126377]
 mesh = SubResource("BoxMesh_lcwtf")
@@ -22,5 +23,10 @@ mesh = SubResource("BoxMesh_lcwtf")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ground" unique_id=1568981887]
 shape = SubResource("BoxShape3D_4vo8a")
 
-[node name="Player" parent="ground" unique_id=1055697178 instance=ExtResource("1_bb8m0")]
+[node name="Player" parent="." unique_id=1055697178 instance=ExtResource("1_bb8m0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.711617, 2.5857842, 1.923656)
+
+[node name="TopLight" type="DirectionalLight3D" parent="." unique_id=2105073696]
+transform = Transform3D(0.9063078, 0.36599818, -0.21130913, 0, 0.49999997, 0.86602545, 0.4226183, -0.7848856, 0.45315388, 0, 2.8345075, -1.9364972)
+light_energy = 1.2
+shadow_enabled = true
