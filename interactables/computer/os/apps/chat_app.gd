@@ -10,7 +10,7 @@ const UNKNOWN: StringName = &"unknown"
 @onready var send_button: Button = $Send
 
 var story: Story
-var current_contact_id: StringName = LI
+var current_contact_id: StringName
 var selected_option_id: StringName
 #endregion
 
@@ -25,7 +25,7 @@ func _ready() -> void:
 	send_button.pressed.connect(_send_selected)
 
 
-## 绑定跨世界 Story；首次展示李哥，但保留其初始未读标记直到玩家点击联系人。
+## 绑定跨世界 Story；初始不选联系人，玩家点击后才显示右侧内容。
 func setup(next_story: Story) -> void:
 	if story != null and story.changed.is_connected(_refresh):
 		story.changed.disconnect(_refresh)
@@ -51,6 +51,13 @@ func _refresh() -> void:
 		return
 	_refresh_contact($Contacts/Li, LI)
 	_refresh_contact($Contacts/Unknown, UNKNOWN)
+	var has_contact: bool = not current_contact_id.is_empty()
+	$Header.visible = has_contact
+	history.visible = has_contact
+	$Options.visible = has_contact
+	send_button.visible = has_contact
+	if not has_contact:
+		return
 	var contact: Dictionary = story.get_contacts()[0 if current_contact_id == LI else 1]
 	$Header/Portrait.texture = $Contacts/Li/Portrait.texture if current_contact_id == LI else $Contacts/Unknown/Portrait.texture
 	$Header/Name.text = contact.name

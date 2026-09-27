@@ -25,7 +25,15 @@ var is_transitioning: bool = false
 
 ## 初始化当前世界中的 Controller 及其摄像机。
 func _ready() -> void:
+	get_tree().auto_accept_quit = false
+	_clear_session_saves()
 	_initialize_controllers()
+
+
+## 系统关闭窗口时也先清理本轮世界切换快照。
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		quit_game()
 
 
 ## 使用 E 返回上一个 Controller；普通玩家状态下的 E 仍用于交互。
@@ -118,6 +126,24 @@ func _enter_game_world() -> void:
 #endregion
 
 #region 世界
+
+## 清空 user://save 内的会话文件；项目内 res://map 蓝图不受影响。
+func _clear_session_saves() -> void:
+	var absolute_directory: String = ProjectSettings.globalize_path(SAVE_DIRECTORY)
+	var directory: DirAccess = DirAccess.open(absolute_directory)
+	if directory == null:
+		return
+	for file_name: String in directory.get_files():
+		var file_path: String = absolute_directory.path_join(file_name)
+		var error: Error = DirAccess.remove_absolute(file_path)
+		assert(error == OK, "无法删除会话存档: %s" % file_path)
+
+
+## 菜单和系统关闭事件统一从这里退出，确保磁盘上不留下会话快照。
+func quit_game() -> void:
+	_clear_session_saves()
+	get_tree().paused = false
+	get_tree().quit()
 
 ## 将当前世界和 Root 的全局状态写入唯一存档。
 func save_game() -> Error:

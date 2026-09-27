@@ -13,6 +13,7 @@ const ComputerOSType = preload("res://interactables/computer/os/computer_os.gd")
 @export var computer_view: SubViewportContainer
 @export_dir var disk_root: String = "res://interactables/computer/computer_content/computer_01/C"
 @export var admin_password: String = "admin"
+@export var administrator_unlocked: bool = false
 @export var game_installed: bool = false
 @export var is_powered_on: bool = false
 @export var auto_start_once: bool = false
@@ -35,6 +36,7 @@ func _ready() -> void:
 	computer_os.game_launch_requested.connect(func() -> void: game_launch_requested.emit(self))
 	computer_os.power_off_requested.connect(power_off)
 	computer_os.boot_finished.connect(boot_audio.play)
+	computer_os.bios_requested.connect(_unlock_administrator)
 	computer_os.setup(disk_root, admin_password, game_installed, is_powered_on)
 	_setup_screen_texture()
 	if auto_start_once:
@@ -108,6 +110,8 @@ func _on_interactable_interacted(_interactor: Node3D) -> void:
 
 ## 实体电源按钮使用同一入口切换开关机状态。
 func toggle_power() -> void:
+	if computer_os.is_busy():
+		return
 	if is_powered_on:
 		power_off()
 	else:
@@ -134,4 +138,9 @@ func power_off() -> void:
 ## Root 保存前查询启动过渡是否已经结束。
 func is_busy() -> bool:
 	return computer_os.is_busy()
+
+
+## 连续五次拒绝启动确认后只记录管理员权限；BIOS 界面后续接入此状态。
+func _unlock_administrator() -> void:
+	administrator_unlocked = true
 #endregion

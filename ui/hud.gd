@@ -60,7 +60,9 @@ func _input(event: InputEvent) -> void:
 
 ## 退出当前游戏进程。
 func _on_exit_pressed() -> void:
-	get_tree().quit()
+	var game_root: Node = get_tree().current_scene
+	assert(game_root.has_method("quit_game"), "当前主场景缺少 quit_game 接口")
+	game_root.call("quit_game")
 
 
 ## 设置入口暂不执行任何效果。

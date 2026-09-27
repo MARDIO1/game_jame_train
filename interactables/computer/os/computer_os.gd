@@ -48,11 +48,22 @@ const BOOT_TEXT: String = """BIOS v1.04
 玩家是否加载完毕?[Y/N]"""
 const BOOT_QUESTION: String = "玩家是否加载完毕?[Y/N]"
 const BOOT_DURATION_S: float = 6.0
+const SHUTDOWN_TEXT: String = """[OK]已停止用户会话
+[OK]已停止网络服务
+[OK]已卸载用户文件系统
+[OK]已完成磁盘同步
+
+正在关闭电源...
+
+Power down."""
+const SHUTDOWN_DURATION_S: float = 2.5
+const BIOS_REJECTION_COUNT: int = 5
 
 signal game_installed
 signal game_launch_requested
 signal power_off_requested
 signal boot_finished
+signal bios_requested
 
 @onready var file_manager_button: Button = $Desktop/FileManagerButton
 @onready var chat_button: Button = $Desktop/ChatButton
@@ -83,7 +94,9 @@ var story: Story
 var is_game_installed: bool = false
 var is_powered_on: bool = false
 var is_booting: bool = false
+var is_shutting_down: bool = false
 var is_waiting_for_boot_input: bool = false
+var boot_rejection_count: int = 0
 var typing_target: String
 var typed_character_count: int = 0
 var typing_interval_s: float = 0.02
@@ -101,6 +114,11 @@ func _ready() -> void:
 	game_button.pressed.connect(_open_game)
 	start_button.pressed.connect(_toggle_start_menu)
 	$StartMenu/Shutdown.pressed.connect(power_off_requested.emit)
+	var terminal_scroll_bar: VScrollBar = boot_text.get_v_scroll_bar()
+	terminal_scroll_bar.hide()
+	terminal_scroll_bar.modulate = Color.TRANSPARENT
+	terminal_scroll_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	terminal_scroll_bar.focus_mode = Control.FOCUS_NONE
 	custom_cursor.hide()
 	start_menu.hide()
 
@@ -120,14 +138,17 @@ func setup(root_path: String, password: String, installed: bool, powered_on: boo
 		_show_powered_off()
 
 
-## 在场景未暂停时推进启动文字；RichTextLabel 自动滚动到最新一行。
+## 推进开关机文字；RichTextLabel 仅自动跟随末行，不接受手动滚动。
 func _process(delta: float) -> void:
-	if not is_booting or is_waiting_for_boot_input:
+	if (not is_booting and not is_shutting_down) or is_waiting_for_boot_input:
 		return
 	if desktop_pause_remaining_s > 0.0:
 		desktop_pause_remaining_s -= delta
 		if desktop_pause_remaining_s <= 0.0:
-			_show_desktop(true)
+			if is_shutting_down:
+				_show_powered_off()
+			else:
+				_show_desktop(true)
 		return
 	typing_elapsed_s += delta
 	while typing_elapsed_s >= typing_interval_s and typed_character_count < typing_target.length():
@@ -135,7 +156,9 @@ func _process(delta: float) -> void:
 		typed_character_count += 1
 		boot_text.text = typing_target.left(typed_character_count)
 	if typed_character_count == typing_target.length():
-		if finish_after_typing:
+		if is_shutting_down:
+			desktop_pause_remaining_s = 1.0
+		elif finish_after_typing:
 			finish_after_typing = false
 			desktop_pause_remaining_s = 1.0
 		else:
@@ -157,8 +180,12 @@ func _input(event: InputEvent) -> void:
 		return
 	get_viewport().set_input_as_handled()
 	if key_event.keycode == KEY_N or key_event.physical_keycode == KEY_N:
+		boot_rejection_count += 1
+		if boot_rejection_count == BIOS_REJECTION_COUNT:
+			bios_requested.emit()
 		_append_boot_text("\nN\n\n" + BOOT_QUESTION, false)
 	else:
+		boot_rejection_count = 0
 		_append_boot_text("\nY\n\nfakeos启动。", true)
 #endregion
 
@@ -182,7 +209,9 @@ func set_cursor(cursor_position: Vector2, inside_screen: bool) -> void:
 func boot() -> void:
 	is_powered_on = true
 	is_booting = true
+	is_shutting_down = false
 	is_waiting_for_boot_input = false
+	boot_rejection_count = 0
 	finish_after_typing = false
 	typing_target = BOOT_TEXT
 	typed_character_count = 0
@@ -195,22 +224,30 @@ func boot() -> void:
 	custom_cursor.hide()
 
 
-## 关机时关闭所有软件窗口并保留一块持续渲染的黑屏。
+## 关机时先关闭窗口，再逐字播放关机日志，最后保留持续渲染的黑屏。
 func shutdown() -> void:
 	is_powered_on = false
 	is_booting = false
+	is_shutting_down = true
 	is_waiting_for_boot_input = false
 	desktop_pause_remaining_s = 0.0
 	for app_window: Control in windows.values():
 		app_window.queue_free()
 	windows.clear()
 	apps.clear()
-	_show_powered_off()
+	typing_target = SHUTDOWN_TEXT
+	typed_character_count = 0
+	typing_elapsed_s = 0.0
+	typing_interval_s = SHUTDOWN_DURATION_S / float(typing_target.length())
+	boot_text.text = ""
+	boot_screen.show()
+	start_menu.hide()
+	custom_cursor.hide()
 
 
 ## 当前是否处于禁止存档的启动过程。
 func is_busy() -> bool:
-	return is_booting
+	return is_booting or is_shutting_down
 
 
 ## 在已有启动输出后继续逐字打印一段文字。
@@ -225,6 +262,7 @@ func _append_boot_text(text: String, finish: bool) -> void:
 func _show_desktop(play_sound: bool) -> void:
 	is_powered_on = true
 	is_booting = false
+	is_shutting_down = false
 	is_waiting_for_boot_input = false
 	_refresh_desktop_files()
 	boot_screen.hide()
@@ -234,6 +272,7 @@ func _show_desktop(play_sound: bool) -> void:
 
 ## 黑屏仍由 SubViewport 持续渲染，实体屏幕不会更换纹理或变形。
 func _show_powered_off() -> void:
+	is_shutting_down = false
 	boot_text.text = ""
 	boot_screen.show()
 	start_menu.hide()

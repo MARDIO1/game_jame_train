@@ -81,7 +81,6 @@ offset_top = 50.0
 offset_right = 203.0
 offset_bottom = 140.0
 toggle_mode = true
-button_pressed = true
 theme_override_styles/normal = SubResource("ContactNormal")
 theme_override_styles/hover = SubResource("ContactSelected")
 theme_override_styles/pressed = SubResource("ContactSelected")
@@ -106,7 +105,6 @@ offset_top = 8.0
 offset_right = 172.0
 offset_bottom = 48.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 28
 text = "李哥"
 vertical_alignment = 1
@@ -118,7 +116,6 @@ offset_top = 48.0
 offset_right = 174.0
 offset_bottom = 78.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "○ 离线"
 vertical_alignment = 1
 
@@ -215,6 +212,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Header" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -253,6 +251,7 @@ text = "○ 离线"
 vertical_alignment = 1
 
 [node name="History" type="TextEdit" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -268,6 +267,7 @@ wrap_mode = 1
 scroll_fit_content_height = false
 
 [node name="Options" type="VBoxContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -304,6 +304,7 @@ text = "2. 对话应该对应一个剧情有关的状态机"
 alignment = 0
 
 [node name="Send" type="Button" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
